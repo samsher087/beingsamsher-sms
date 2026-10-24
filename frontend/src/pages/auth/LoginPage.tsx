@@ -256,9 +256,9 @@ export const LoginPage: React.FC = () => {
           correctTenantCode: data.correctTenantCode,
           correctTenantName: data.correctTenantName,
         });
-      } else if (err.response?.status === 404) {
+      } else if (err.response?.status === 404 || err.response?.status === 405) {
         setErrorInfo({
-          message: 'Backend API route not found (404). When deployed on Vercel, please make sure your backend server is deployed and the VITE_API_URL environment variable is set in Vercel settings.',
+          message: `Backend API unavailable (${err.response?.status}). Your frontend is deployed on Vercel, but the backend Express/MongoDB server needs to be deployed (e.g. on Render/Railway) with VITE_API_URL set in Vercel settings.`,
           code: 'BACKEND_NOT_FOUND',
         });
       } else if (err.response?.status === 500) {

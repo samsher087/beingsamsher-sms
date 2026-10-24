@@ -24,7 +24,9 @@ dotenv.config();
 export const seedDatabase = async () => {
   const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/softdeals_sms';
   console.log(`[Seed] Connecting to MongoDB: ${mongoUri}`);
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, {
+    dbName: 'softdeals_sms',
+  });
 
   console.log('[Seed] Clearing existing collections...');
   await Promise.all([
