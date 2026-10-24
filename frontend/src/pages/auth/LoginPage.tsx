@@ -256,9 +256,14 @@ export const LoginPage: React.FC = () => {
           correctTenantCode: data.correctTenantCode,
           correctTenantName: data.correctTenantName,
         });
+      } else if (err.response?.status === 404) {
+        setErrorInfo({
+          message: 'Backend API route not found (404). When deployed on Vercel, please make sure your backend server is deployed and the VITE_API_URL environment variable is set in Vercel settings.',
+          code: 'BACKEND_NOT_FOUND',
+        });
       } else if (err.response?.status === 500) {
         setErrorInfo({
-          message: 'Backend server connection error (500). Please ensure the backend server on port 5000 is running.',
+          message: 'Backend server connection error (500). Please ensure the backend server is running and database is connected.',
           code: 'SERVER_OFFLINE',
         });
       } else {
@@ -274,7 +279,7 @@ export const LoginPage: React.FC = () => {
   const Icon = currentPortal.icon;
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col justify-start py-6 sm:py-10 px-4 sm:px-6 lg:px-8 selection:bg-teal-500 selection:text-white font-sans">
+    <div className="relative min-h-screen w-full flex flex-col justify-center px-4 sm:px-6 lg:px-8 selection:bg-teal-500 selection:text-white font-sans py-4 lg:py-6 overflow-x-hidden">
       {/* Office Workstation Background Image with subtle depth-of-field */}
       <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat scale-105 filter blur-[2px] transform-gpu pointer-events-none"
@@ -285,32 +290,32 @@ export const LoginPage: React.FC = () => {
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/55 to-slate-950/80 pointer-events-none" />
 
       {/* Foreground Content with Translucent Glass Styling */}
-      <div className="relative z-10 max-w-6xl mx-auto w-full space-y-5 sm:space-y-6">
+      <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col space-y-3.5 sm:space-y-4 my-auto">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center space-x-2 bg-slate-900/50 backdrop-blur-md border border-teal-500/40 text-teal-300 font-semibold px-3.5 py-1 rounded-full text-xs shadow-lg">
+        <div className="text-center space-y-1.5">
+          <div className="inline-flex items-center space-x-2 bg-slate-900/50 backdrop-blur-md border border-teal-500/40 text-teal-300 font-semibold px-3 py-0.5 rounded-full text-xs shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
             <span>SoftDeals — Digital Solutions</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
             School Management System
           </h1>
-          <p className="text-xs sm:text-sm text-slate-200/90 max-w-xl mx-auto drop-shadow-sm font-medium">
+          <p className="text-xs sm:text-sm text-slate-200/90 max-w-lg mx-auto drop-shadow-sm font-medium">
             Select your assigned school portal below to sign in with role-based access control.
           </p>
         </div>
 
         {/* Role Portal Selector Bar with Glassmorphic Translucency */}
-        <div className="bg-slate-900/55 dark:bg-[#0B1320]/60 backdrop-blur-xl p-2.5 rounded-2xl border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4)]">
-          <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/10 mb-2">
+        <div className="bg-slate-900/55 dark:bg-[#0B1320]/60 backdrop-blur-xl p-2.5 rounded-2xl border border-white/20 shadow-[0_12px_30px_rgba(0,0,0,0.35)]">
+          <div className="flex items-center justify-between px-3 py-1 border-b border-white/10 mb-2">
             <span className="text-[11px] font-bold text-slate-200 uppercase tracking-wider">
               Step 1: Choose Your Role Portal
             </span>
-            <span className="text-[10px] text-teal-400 font-semibold tracking-wide">
+            <span className="text-[11px] text-teal-400 font-semibold tracking-wide">
               Role Access Strictly Enforced
             </span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5">
+          <div className="grid grid-cols-7 gap-1.5">
             {portals.map((p) => {
               const PIcon = p.icon;
               const isSelected = selectedRole === p.role;
@@ -319,14 +324,14 @@ export const LoginPage: React.FC = () => {
                   key={p.role}
                   type="button"
                   onClick={() => handleSelectRole(p.role)}
-                  className={`flex flex-col items-center text-center p-2.5 rounded-xl transition-all backdrop-blur-md ${
+                  className={`flex flex-col items-center justify-center text-center p-2 sm:p-2.5 h-[62px] rounded-xl transition-all backdrop-blur-md ${
                     isSelected
-                      ? `${p.color} text-white shadow-xl shadow-teal-500/25 font-bold scale-[1.03] border border-white/30`
+                      ? `${p.color} text-white shadow-xl font-bold ring-2 ring-white/60 border border-white/30`
                       : 'bg-white/10 hover:bg-white/15 text-slate-200 hover:text-white border border-white/10 shadow-sm'
                   }`}
                 >
-                  <PIcon className="w-4 h-4 mb-1" />
-                  <span className="text-xs font-semibold leading-tight">{p.title}</span>
+                  <PIcon className="w-4 h-4 mb-1 shrink-0" />
+                  <span className="text-xs font-semibold leading-tight truncate w-full">{p.title}</span>
                 </button>
               );
             })}
@@ -334,25 +339,25 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Main Sign-In Card: Form + Permissions Matrix */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-stretch">
           {/* Left Column: Sign-In Form */}
-          <div className="lg:col-span-7 bg-slate-900/60 dark:bg-[#0B1320]/65 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-white/20 flex flex-col justify-between space-y-6 text-white">
-            <div className="space-y-4">
-              {/* Active Portal Header */}
-              <div className="flex items-start space-x-3.5 pb-4 border-b border-white/10">
-                <div className={`w-12 h-12 rounded-2xl ${currentPortal.color} text-white flex items-center justify-center shrink-0 shadow-lg border border-white/20`}>
-                  <Icon className="w-6 h-6" />
+          <div className="lg:col-span-7 bg-slate-900/60 dark:bg-[#0B1320]/65 backdrop-blur-2xl rounded-3xl p-5 sm:p-6 lg:p-7 shadow-[0_25px_55px_rgba(0,0,0,0.5)] border border-white/20 flex flex-col justify-between min-h-[470px] space-y-3.5 text-white">
+            <div className="space-y-3">
+              {/* Active Portal Header with Fixed Height */}
+              <div className="flex items-start space-x-3.5 pb-3 border-b border-white/10">
+                <div className={`w-11 h-11 rounded-2xl ${currentPortal.color} text-white flex items-center justify-center shrink-0 shadow-lg border border-white/20`}>
+                  <Icon className="w-5.5 h-5.5" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2">
-                    <h2 className="text-lg sm:text-xl font-bold text-white drop-shadow-sm">
+                    <h2 className="text-lg sm:text-xl font-bold text-white drop-shadow-sm truncate">
                       {currentPortal.portalName}
                     </h2>
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${currentPortal.bgLight} ${currentPortal.textColor} border ${currentPortal.borderColor} backdrop-blur-sm`}>
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${currentPortal.bgLight} ${currentPortal.textColor} border ${currentPortal.borderColor} backdrop-blur-sm shrink-0`}>
                       {currentPortal.role.replace('_', ' ')}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 mt-0.5 font-medium leading-relaxed">
+                  <p className="text-xs text-slate-300 mt-1 font-medium leading-relaxed h-[36px] line-clamp-2">
                     {currentPortal.desc}
                   </p>
                 </div>
@@ -360,7 +365,7 @@ export const LoginPage: React.FC = () => {
 
               {errorInfo && (
                 <div
-                  className={`p-4 rounded-2xl text-xs space-y-2.5 border backdrop-blur-md transition-all ${
+                  className={`p-3 rounded-2xl text-xs space-y-2 border backdrop-blur-md transition-all ${
                     errorInfo.code === 'WRONG_SCHOOL'
                       ? 'bg-amber-950/60 border-amber-500/50 text-amber-200 shadow-sm'
                       : 'bg-rose-950/60 border-rose-500/50 text-rose-200'
@@ -368,29 +373,29 @@ export const LoginPage: React.FC = () => {
                 >
                   <div className="flex items-start space-x-2.5">
                     {errorInfo.code === 'WRONG_SCHOOL' ? (
-                      <School className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <School className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                     ) : (
                       <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
                     )}
-                    <div className="space-y-1 flex-1">
+                    <div className="space-y-0.5 flex-1">
                       {errorInfo.code === 'WRONG_SCHOOL' && (
-                        <p className="font-bold text-xs uppercase tracking-wide text-amber-300 flex items-center space-x-1.5">
-                          <span>Incorrect School Branch Selected</span>
+                        <p className="font-bold text-xs uppercase tracking-wide text-amber-300">
+                          Incorrect School Branch Selected
                         </p>
                       )}
-                      <p className="leading-relaxed font-medium">{errorInfo.message}</p>
+                      <p className="text-xs leading-relaxed font-medium">{errorInfo.message}</p>
                     </div>
                   </div>
 
                   {errorInfo.code === 'WRONG_SCHOOL' && errorInfo.correctTenantCode && (
-                    <div className="pt-1 flex items-center justify-end">
+                    <div className="pt-0.5 flex items-center justify-end">
                       <button
                         type="button"
                         onClick={() => {
                           setTenantCode(errorInfo.correctTenantCode!);
                           setErrorInfo(null);
                         }}
-                        className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5 border border-white/20"
+                        className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5 border border-white/20"
                       >
                         <span>Switch to {errorInfo.correctTenantName || 'Correct School'}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -400,35 +405,51 @@ export const LoginPage: React.FC = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
-                {selectedRole !== 'SUPER_ADMIN' && (
-                  <div>
-                    <label className="block font-semibold text-slate-200 mb-1">
+              <form onSubmit={handleSubmit} className="space-y-2.5 text-xs">
+                {/* Branch / Tenant Slot with Stable Height */}
+                <div>
+                  <div className="flex items-center justify-between mb-1 h-5">
+                    <label className="block text-xs font-semibold text-slate-200 truncate mr-2">
                       School Branch / Tenant
                     </label>
+                    {selectedRole === 'SUPER_ADMIN' ? (
+                      <span className="text-[10px] text-teal-400 font-semibold shrink-0">Global Platform Scope</span>
+                    ) : (
+                      <span className="text-[10px] text-slate-400 shrink-0">Multi-Branch</span>
+                    )}
+                  </div>
+                  {selectedRole === 'SUPER_ADMIN' ? (
+                    <div className="w-full px-3.5 py-2 rounded-xl border border-teal-500/30 bg-teal-950/25 text-teal-200 text-xs sm:text-sm font-semibold flex items-center justify-between shadow-inner h-[38px]">
+                      <span className="flex items-center space-x-2">
+                        <Globe className="w-4 h-4 text-teal-400 shrink-0" />
+                        <span className="truncate">SoftDeals Cloud HQ (All School Instances)</span>
+                      </span>
+                      <span className="text-[9px] uppercase font-bold bg-teal-500/20 px-1.5 py-0.5 rounded text-teal-300 border border-teal-500/30 shrink-0">ALL TENANTS</span>
+                    </div>
+                  ) : (
                     <select
                       value={tenantCode}
                       onChange={(e) => {
                         setTenantCode(e.target.value);
                         setErrorInfo(null);
                       }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner font-medium cursor-pointer"
+                      className="w-full px-3.5 py-2 rounded-xl border border-white/20 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner text-xs sm:text-sm font-medium cursor-pointer h-[38px]"
                     >
                       <option value="dps-rkp" className="bg-slate-900 text-white">D.A.V Public School, Pindersot</option>
                       <option value="st-xavier" className="bg-slate-900 text-white">St. Xavier's Senior Secondary School</option>
                     </select>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block font-semibold text-slate-200">
+                  <div className="flex items-center justify-between mb-1 h-5">
+                    <label className="block text-xs font-semibold text-slate-200 truncate mr-2">
                       Authorized {currentPortal.title} Email
                     </label>
-                    <span className="text-[10px] text-slate-400">Must match {currentPortal.role}</span>
+                    <span className="text-[10px] text-slate-400 shrink-0">Must match {currentPortal.role}</span>
                   </div>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-300 absolute left-3.5 top-3 pointer-events-none" />
+                    <Mail className="w-4 h-4 text-slate-300 absolute left-3.5 top-2.5 pointer-events-none" />
                     <input
                       type="email"
                       required
@@ -438,14 +459,14 @@ export const LoginPage: React.FC = () => {
                         setErrorInfo(null);
                       }}
                       placeholder={`e.g. ${currentPortal.email}`}
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner font-medium"
+                      className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner text-xs sm:text-sm font-medium h-[38px]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block font-semibold text-slate-200">
+                  <div className="flex items-center justify-between mb-1 h-5">
+                    <label className="block text-xs font-semibold text-slate-200">
                       Password
                     </label>
                     <button
@@ -455,14 +476,14 @@ export const LoginPage: React.FC = () => {
                         setPassword('Password@123');
                         setErrorInfo(null);
                       }}
-                      className="text-[11px] text-teal-300 hover:text-teal-200 px-2 py-0.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-400/20 transition backdrop-blur-sm flex items-center space-x-1 font-medium"
+                      className="text-[11px] text-teal-300 hover:text-teal-200 px-2 py-0.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-400/20 transition backdrop-blur-sm flex items-center space-x-1 font-medium shrink-0"
                     >
                       <KeyRound className="w-3 h-3" />
                       <span>Auto-fill Demo Password</span>
                     </button>
                   </div>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-300 absolute left-3.5 top-3 pointer-events-none" />
+                    <Lock className="w-4 h-4 text-slate-300 absolute left-3.5 top-2.5 pointer-events-none" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
@@ -472,12 +493,12 @@ export const LoginPage: React.FC = () => {
                         setErrorInfo(null);
                       }}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner font-medium"
+                      className="w-full pl-10 pr-9 py-2 rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 focus:bg-white/15 backdrop-blur-md transition-all shadow-inner text-xs sm:text-sm font-medium h-[38px]"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-2.5 p-1 text-slate-300 hover:text-white transition rounded-lg hover:bg-white/10 focus:outline-none"
+                      className="absolute right-3 top-2 p-0.5 text-slate-300 hover:text-white transition rounded-lg hover:bg-white/10 focus:outline-none"
                       title={showPassword ? 'Hide password' : 'Show password'}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
@@ -493,7 +514,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full mt-3 ${currentPortal.color} hover:brightness-110 text-white font-bold py-3.5 rounded-xl shadow-xl transition flex items-center justify-center space-x-2 text-sm disabled:opacity-50 border border-white/20 hover:shadow-[0_0_25px_rgba(20,184,166,0.45)]`}
+                  className={`w-full mt-2 ${currentPortal.color} hover:brightness-110 text-white font-bold py-3 rounded-xl shadow-xl transition flex items-center justify-center space-x-2 text-sm sm:text-base disabled:opacity-50 border border-white/20 hover:shadow-[0_0_25px_rgba(20,184,166,0.45)] h-[44px]`}
                 >
                   <span>{loading ? 'Authenticating Role...' : `Sign In to ${currentPortal.title} Portal`}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -501,7 +522,7 @@ export const LoginPage: React.FC = () => {
               </form>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
+            <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
               <Link
                 to={`/public/${tenantCode}`}
                 className="text-teal-300 hover:text-teal-200 hover:underline font-semibold"
@@ -512,55 +533,70 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Portal Role Permissions Matrix */}
-          <div className="lg:col-span-5 bg-slate-900/60 dark:bg-[#0B1320]/65 backdrop-blur-2xl rounded-3xl p-6 sm:p-7 shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-white/20 flex flex-col justify-between space-y-4 text-white">
-            <div className="space-y-4">
+          {/* Right Column: Portal Role Permissions Matrix with Locked Height */}
+          <div className="lg:col-span-5 bg-slate-900/60 dark:bg-[#0B1320]/65 backdrop-blur-2xl rounded-3xl p-5 sm:p-6 lg:p-7 shadow-[0_25px_55px_rgba(0,0,0,0.5)] border border-white/20 flex flex-col justify-between min-h-[470px] space-y-3 text-white">
+            <div className="space-y-3">
               <div>
-                <h3 className="font-extrabold text-sm text-white uppercase tracking-wider flex items-center space-x-1.5">
+                <h3 className="font-extrabold text-xs sm:text-sm text-white uppercase tracking-wider flex items-center space-x-1.5">
                   <ShieldCheck className="w-4 h-4 text-teal-400" />
                   <span>Role Access Privileges</span>
                 </h3>
                 <p className="text-xs text-slate-300 mt-1 font-medium">
-                  Once authenticated as <span className="font-bold text-white">{currentPortal.title}</span>, your session is scoped to these permissions:
+                  Scoped to <span className="font-bold text-white">{currentPortal.title}</span> permissions:
                 </p>
               </div>
 
-              {/* Granted Permissions */}
-              <div className="space-y-2">
-                <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center space-x-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Authorized Features</span>
-                </span>
-                <ul className="space-y-1.5 text-xs text-slate-200">
-                  {currentPortal.allowedFeatures.map((feat, idx) => (
-                    <li key={idx} className="flex items-start space-x-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Restricted Permissions */}
-              {currentPortal.restrictedFeatures.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-white/10">
-                  <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center space-x-1">
-                    <XCircle className="w-3.5 h-3.5" />
-                    <span>Strictly Inaccessible / Hidden</span>
+              {/* Fixed Height Container for Features to Eliminate Fluctuation */}
+              <div className="h-[240px] flex flex-col justify-between">
+                {/* Granted Permissions */}
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center space-x-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Authorized Features</span>
                   </span>
-                  <ul className="space-y-1.5 text-xs text-slate-400">
-                    {currentPortal.restrictedFeatures.map((feat, idx) => (
-                      <li key={idx} className="flex items-start space-x-2 line-through opacity-75">
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
-                        <span>{feat}</span>
+                  <ul className="space-y-1 text-xs text-slate-200">
+                    {currentPortal.allowedFeatures.slice(0, 5).map((feat, idx) => (
+                      <li key={idx} className="flex items-center space-x-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                        <span className="truncate">{feat}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              )}
+
+                {/* Restricted Permissions / System Scope Slot */}
+                <div className="space-y-1.5 pt-2 border-t border-white/10">
+                  {currentPortal.restrictedFeatures.length > 0 ? (
+                    <>
+                      <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center space-x-1">
+                        <XCircle className="w-3.5 h-3.5" />
+                        <span>Strictly Inaccessible / Hidden</span>
+                      </span>
+                      <ul className="space-y-1 text-xs text-slate-400">
+                        {currentPortal.restrictedFeatures.slice(0, 3).map((feat, idx) => (
+                          <li key={idx} className="flex items-center space-x-2 line-through opacity-75">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                            <span className="truncate">{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[11px] font-bold text-teal-400 uppercase tracking-wider flex items-center space-x-1">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>System Scope & Clearance</span>
+                      </span>
+                      <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-xs text-teal-200 leading-relaxed">
+                        Unrestricted Root Access — Super Admin has zero role or tenant restrictions system-wide.
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <div className="p-3.5 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 text-[11px] text-slate-300 leading-relaxed">
+            <div className="p-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 text-[11px] text-slate-300 leading-relaxed">
               <span className="font-semibold text-white">RBAC Security Guarantee:</span> Endpoints enforce strict JWT role verification on every API request. Unauthorized access returns HTTP 403 Forbidden.
             </div>
           </div>
@@ -569,3 +605,4 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+
