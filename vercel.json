@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://antibodies-positive-carpet-segments.trycloudflare.com/api/:path*"
+      "destination": "https://initiated-divisions-rewards-communicate.trycloudflare.com/api/:path*"
     },
     {
       "source": "/((?!api/).*)",
