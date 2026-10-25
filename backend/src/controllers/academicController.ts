@@ -4,7 +4,7 @@ import { ClassSection } from '../models/ClassSection';
 import { Tenant } from '../models/Tenant';
 import { Student } from '../models/Student';
 
-// SESSIONS
+// SESSIONS 
 export const listSessions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const tenantId = req.tenantId;
