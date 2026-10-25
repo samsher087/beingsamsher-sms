@@ -261,9 +261,9 @@ export const LoginPage: React.FC = () => {
           message: `Backend API unavailable (${err.response?.status}). Your frontend is deployed on Vercel, but the backend Express/MongoDB server needs to be deployed (e.g. on Render/Railway) with VITE_API_URL set in Vercel settings.`,
           code: 'BACKEND_NOT_FOUND',
         });
-      } else if (err.response?.status === 502 || err.response?.status === 503 || err.response?.status === 504) {
+      } else if (err.response?.status === 502 || err.response?.status === 503 || err.response?.status === 504 || err.response?.status === 530) {
         setErrorInfo({
-          message: `Backend API server is unreachable (${err.response?.status} Bad Gateway). The backend server or tunnel is offline. Please deploy your backend on Render/Railway or start your backend tunnel.`,
+          message: `Backend API server is unreachable (${err.response?.status} Tunnel/Gateway Error). The backend server or Cloudflare tunnel is offline or expired.`,
           code: 'BACKEND_OFFLINE',
         });
       } else if (err.response?.status === 500) {
